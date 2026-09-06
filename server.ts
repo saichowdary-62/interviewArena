@@ -1,6 +1,5 @@
 import express from 'express';
 import path from 'path';
-import { createServer as createViteServer } from 'vite';
 import mammoth from 'mammoth';
 import * as XLSX from 'xlsx';
 import { DOMMatrix, ImageData, Path2D } from '@napi-rs/canvas';
@@ -1726,6 +1725,7 @@ Return ONLY valid JSON without markdown code fences.`;
 // Vite middleware for development & production asset serving
 async function startServer() {
   if (process.env.NODE_ENV !== 'production') {
+    const { createServer: createViteServer } = await import('vite');
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: 'spa',
