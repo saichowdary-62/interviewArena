@@ -16,7 +16,6 @@
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
-    "@napi-rs/canvas": "^1.0.8",
     "@supabase/supabase-js": "^2.115.0",
     "dotenv": "^17.2.3",
     "express": "^4.21.2",

@@ -2,7 +2,6 @@ import express from 'express';
 import path from 'path';
 import mammoth from 'mammoth';
 import * as XLSX from 'xlsx';
-import { DOMMatrix, ImageData, Path2D } from '@napi-rs/canvas';
 import dotenv from 'dotenv';
 import { createClient } from '@supabase/supabase-js';
 import { COMPETENCY_FRAMEWORKS, getCompetencyFramework } from './src/lib/competencyFrameworks.js';
@@ -23,11 +22,43 @@ import {
   maskApiKey,
 } from './server/aiProvider.js';
 
-// PDF.js expects browser canvas globals when running inside Node.
-const nodeCanvasGlobals = globalThis as any;
-nodeCanvasGlobals.DOMMatrix = DOMMatrix;
-nodeCanvasGlobals.ImageData = ImageData;
-nodeCanvasGlobals.Path2D = Path2D;
+// PDF.js text extraction does not need native canvas rendering. This small
+// fallback covers the matrix operations PDF.js expects if it probes DOMMatrix.
+const nodeGlobals = globalThis as any;
+if (!nodeGlobals.DOMMatrix) {
+  nodeGlobals.DOMMatrix = class DOMMatrix {
+    a = 1; b = 0; c = 0; d = 1; e = 0; f = 0;
+    constructor(init?: number[] | string) {
+      if (Array.isArray(init)) {
+        [this.a, this.b, this.c, this.d, this.e, this.f] = init.length >= 6
+          ? init.slice(0, 6) as [number, number, number, number, number, number]
+          : [1, 0, 0, 1, 0, 0];
+      }
+    }
+    multiply(other: DOMMatrix) {
+      return new nodeGlobals.DOMMatrix([
+        this.a * other.a + this.c * other.b,
+        this.b * other.a + this.d * other.b,
+        this.a * other.c + this.c * other.d,
+        this.b * other.c + this.d * other.d,
+        this.a * other.e + this.c * other.f + this.e,
+        this.b * other.e + this.d * other.f + this.f,
+      ]);
+    }
+    inverse() {
+      const determinant = this.a * this.d - this.b * this.c;
+      if (!determinant) return new nodeGlobals.DOMMatrix();
+      return new nodeGlobals.DOMMatrix([
+        this.d / determinant,
+        -this.b / determinant,
+        -this.c / determinant,
+        this.a / determinant,
+        (this.c * this.f - this.d * this.e) / determinant,
+        (this.b * this.e - this.a * this.f) / determinant,
+      ]);
+    }
+  };
+}
 
 dotenv.config();
 
