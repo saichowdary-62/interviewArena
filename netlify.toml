@@ -8,7 +8,7 @@
 
 [functions]
   node_bundler = "esbuild"
-  external_node_modules = ["@napi-rs/canvas", "pdf-parse", "pdfjs-dist", "vite", "lightningcss", "esbuild", "tsx"]
+  external_node_modules = ["@napi-rs/canvas", "pdf-parse", "pdfjs-dist"]
 
 # Netlify Serverless Functions routing for API endpoints
 [[redirects]]
