@@ -2,6 +2,10 @@
 
 Interview Arena is a resume-grounded mock interview platform. It analyzes a candidate's resume, calculates role alignment and ATS compatibility, generates role-specific questions, records spoken answers, and produces evidence-based evaluation reports.
 
+## Live Demo
+
+The project is deployed on Netlify and can be viewed here: [interviewarena.netlify.app](https://interviewarena.netlify.app/).
+
 ## Features
 
 - Role-specific interview questions based on the selected position, competency framework, experience level, and job description.
@@ -37,6 +41,10 @@ npm run dev
 Open [http://localhost:3000](http://localhost:3000).
 
 The server exposes the React application and API endpoints from the same port.
+
+## Deployment
+
+Interview Arena is deployed on [Netlify](https://www.netlify.com/). The included `netlify.toml` builds the app with `npm run build`, publishes the `dist` directory, deploys the API as a serverless function, and routes client-side pages back to the single-page app.
 
 ## Environment Variables
 
