@@ -1,0 +1,11 @@
+{
+  "name": "Remix Remix Interview Arena",
+  "description": "Enterprise-grade placement readiness and mock interview platform for candidates, colleges, and placement training centers.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
